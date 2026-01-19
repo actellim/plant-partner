@@ -6,7 +6,7 @@
 
 #### Purpose, Scope, and Objectives 
 
-The objective of this project is to develop a recommender/explainer application that uses sensors and AI to help users grow healthy plants by providing species-specific care recommendations. The app will use the sensor data (soil moisture, air temperature, humidity, nutrient levels, pH) with plant databases and potentially AI to give actionable, context-aware advice rather than generic thresholds. Control outputs will be added, time permitting, to enable automated plant care.
+The objective of this project is to develop a recommender/explainer application that uses sensors and AI to help users grow healthy plants by providing species-specific care recommendations. The app will use the sensor data (soil moisture, air temperature, humidity, nutrient levels, pH) with plant databases and potentially AI to give actionable, context-aware advice rather than generic thresholds. Control outputs will be added, time permitting, to enable automated plant care. As this is a course based research project, the primary focus is on the research side, design artifacts and prototypes rather than a full project implementation.
 
 #### Assumptions and Constraints 
 
@@ -18,13 +18,13 @@ The objective of this project is to develop a recommender/explainer application 
 
 #### Project Deliverables 
 
-- A working recommender/explainer app integrating sensors and AI for plant care guidance.
+- A prototype of a recommender/explainer app integrating sensors and AI for plant care guidance.
 - Documentation (literature review, annotated bibliography, etc.).
     - Glossary of Terms.
     - Use Cases and Actors.
     - Class, Communication, Sequence UML Diagrams.
     - Specification Document.
-    - Psuedocode, module outlines.
+    - Pseudocode, module outlines.
 - Project Proposal (this SPMP).
 - Progress Report.
 - First Oral Presentation.
@@ -45,17 +45,20 @@ The duration and personnel requirements of each workflow are as follows:
 
 ### Evolution of the Project Management Plan 
 
-All changes to this project management plan must be agreed upon by the entire project team and the group leader at the time before implementation. Changes should be documented to keep the plan accurate and up to date.
+All changes to this project management plan must be agreed upon by the entire project team and the group leader at the time before implementation. Changes should be documented to keep the plan accurate and up to date. Changes will be tracked via git commits to maintain traceability and accountability.
 
 ## Reference Materials
 
-All artifacts will conform to the standard developed in the SPMP or in ESOF 2670. Reference materials will be constrained to articles available through the university library databases or that are freely available online with a permissive license.
+All artifacts will conform to the standard developed in the SPMP or in ESOF 2670. Reference materials will be constrained to articles available through the university library databases or that are freely available online with a permissive license. All extermal sources will be clearly cited.
 
 ## Definitions and Acronyms
 
 This list is subject to additions.
 
-- **SPMP:** Software Project Management Plan
+- **MVP:** Minimum Viable Product.
+- **RAG:** Retrieval-Augmented Generation.
+- **SPMP:** Software Project Management Plan.
+- **UML:** Unified Modeling Language.
 
 ## Project Organization
 
@@ -65,7 +68,7 @@ All work on this project will be completed by Benita, Fawwaz, Joshua, and Kennet
 
 ### Internal Structure 
 
-The development team consists of four software engineering students working together on different aspects of the project. The internal structure of the project is divided based on areas of research that are assigned during the literature review. Each team member will be responsible for the artifacts of the given workflow from their area of expertise. 
+The development team consists of four software engineering students working together on different aspects of the project. The internal structure of the project is divided based on areas of research that are assigned during literature review. Each team member will be responsible for the artifacts of the given workflow from their area of expertise. 
 
 ### Roles and Responsibilities
 
@@ -80,7 +83,7 @@ Each team member has specific responsibilities to support the successful complet
 - Ensuring the overall quality of project deliverables.
 - Documentation and code artifacts for their portion of the project for each phase of The Unified Process.
 
-Each team member will specialize based around their area of research and progress through the pases with the team. Each team member should be interactive through the entire project, but at no point should anyone be overworked. The team will work collaboratively on all major submissions, the project lead will be responsible for distributing the workload and assembling the artifacts from each team member. Final documents will be reviewed and approved by the entire group before submission.
+Each team member will specialize based around their area of research and progress through the phases with the team. Each team member should be interactive through the entire project, but at no point should anyone be overworked. The team will work collaboratively on all major submissions, the project lead will be responsible for distributing the workload and assembling the artifacts from each team member. Final documents will be reviewed and approved by the entire group before submission.
 
 ## Managerial Process Plans
 
@@ -88,17 +91,17 @@ Each team member will specialize based around their area of research and progres
 
 #### Estimation Plan
 
-The project is planned for a total duration of 10 weeks, aligned with the Unified Process workflows already defined for this course project. The estimate is based on expert judgment and analogy with previous student software projects of similar scope, and it is expressed primarily in time (person-hours) rather than money because this is a course project. The work is divided into requirements, analysis, design, and implementation. Each workflow has clear deliverables (use cases, architecture/design artifacts, a working prototype, and a tested final system) that group members must complete. 
+The project is planned for a total duration of 10 weeks, aligned with the Unified Process workflows already defined for this course project. The estimate is based on expert judgment and analogy with previous student software projects of similar scope, and it is expressed primarily in time (person-hours) rather than money because this is a course project. The work is divided into requirements, analysis, design, and implementation. Each workflow has clear deliverables (use cases, architecture/design artifacts, and a tested prototype) that group members must complete. 
 
 #### Staffing Plan
 
-The project will be completed by a four-member team. To keep responsibilities clear and prevent overlap, each member will take point on their area of expertise, decided during the research phase. Each team member will be responsible for the artifacts developed during each phase, and the group leader will be responsible for integrating all artifacts into a complete, cohesive version for group review. All members participate in testing and review of the artifacts after they have been compiled by the group leader.
+The project will be completed by a four-member team. The leadership rotates as required by the course outline. The appointed group leader will be responsible for coordinating meetings, keeping meeting minutes, delegating tasks, and ensuring that deadlines are met. To keep responsibilities clear and prevent overlap, each member will take point on their area of expertise, decided during the research phase. Each team member will be responsible for the artifacts developed during each phase, and the group leader will be responsible for integrating all artifacts into a complete, cohesive version for group review. All members participate in testing and review of the artifacts after they have been compiled by the group leader.
 
 #### Resource Acquisition Plan
 
 The project requires basic hardware for data collection and standard software development tools. Hardware includes a Raspberry Pi (or equivalent), a soil moisture sensor (preferably capacitive), a temperature/humidity sensor, and a light sensor. Optional sensors such as EC (nutrient proxy) and pH may be added if time allows, but they are not required for the minimum viable system. Additional items include a breadboard, resistors (if needed), and a stable power supply.
 
-Each team member has access to a desktop or lapto computer on which to write code and update documentation using their chosen IDE. Software resources include Git and a Git hosting platform (GitHub) for version control, a code editor (e.g., VS Code), and a lightweight database. The project will be implemented in Python, and the project will maintain clear setup instructions so the system can be run on another machine.
+Each team member has access to a desktop or laptop computer on which to write code and update documentation using their chosen IDE. Software resources include Git and a Git hosting platform (GitHub) for version control, a code editor (e.g., VS Code), and a lightweight database. The project will be implemented in Python, and the project will maintain clear setup instructions so the system can be run on another machine.
 
 #### Project Staff Training Plan
 
@@ -112,7 +115,7 @@ The work is organized into five workflows across 10 weeks:
 
 - **Week 1-2 (Requirements):** write and hand in the complete SPMP, build a Glossary of Terms, define Use Cases and Actors.
 - **Weeks 3-5 (Analysis):** refine use cases, build initial class, communication, sequence diagrams in UML format. Write the Specification Document.
-- **Weeks 6-8 (Design):** complete class diagrams, finalize attributes and methods, update class UML diagrams. Outline modules and write psuedocode.
+- **Weeks 6-8 (Design):** complete class diagrams, finalize attributes and methods, update class UML diagrams. Outline modules and write pseudocode.
 - **Weeks 9-10 (Implementation):** build unit and integration tests, write the first prototype code.
 
 #### Resource Allocation
@@ -125,7 +128,7 @@ This is a student project, the budget is mainly limited to low-cost sensors and 
 
 ### Control Plan
 
-Project control will be handled through artifact-based tracking and strict version control practices. Each workflow has defined outputs. Changes to scope must be agreed upon by the full team and only accepted if they do not threaten the schedule. All code and documentation changes will be made through Git commits, and major changes will be made on feature branches and merged via pull requests with at least one reviewer. The integration lead will ensure that the main branch remains buildable and that unfinished work is isolated to branches. Weekly checkpoints will confirm that progress matches the schedule and that the project remains aligned with the stated objectives.
+Project control will be handled through artifact-based tracking and strict version control practices. Each workflow has defined outputs. Changes to scope must be agreed upon by the full team and only accepted by the team leader if they do not threaten the schedule. All code and documentation changes will be made through Git commits, and major changes will be made on feature branches and merged via pull requests with at least one reviewer. The integration lead will ensure that the main branch remains buildable and that unfinished work is isolated to branches. Weekly checkpoints will confirm that progress matches the schedule and that the project remains aligned with the stated objectives.
 
 ### Risk Management Plan
 
@@ -184,6 +187,7 @@ Testing will be performed throughout the project to ensure reliability.
 
 The testing process will include:
 
+- **Reviews:** artifacts generated during the Requirements, Analysis and Design phases will undergo the review process.
 - **Unit Testing:** individual software components will be tested separately.
 - **Integration Testing:** sensor hardware and software modules will be tested together.
 - **System Testing:** the full system will be tested from data collection to recommendations.
@@ -226,7 +230,7 @@ If a problem occurs during the project:
 - The issue will be discussed in team meetings.
 - The responsible member will attempt to fix it.
 - If needed, work will be reassigned.
-- Serious problems will be reported to the instructor, Mr. Mattaeo.
+- Serious problems will be reported to the instructor, Mr. Matteo.
 
 All important problems will be tracked using GitHub issues so they can be resolved in an organized way.
 
