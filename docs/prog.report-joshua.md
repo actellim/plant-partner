@@ -1,46 +1,53 @@
-# Retrieval-Augmented Generation (RAG)
+## Retrieval-Augmented Generation (RAG)
 
-## 1. Introduction
-This section introduces Retrieval-Augmented Generation (RAG) and explains its relevance for providing reliable, knowledge-based recommendations.
+### Introduction
 
-## 2. RAG in Prior Research
-Summary of how RAG has been applied
+Part of the reason that Large Multimodal Models (LMMs) have proven to be so robustly useful is their ability to think creatively. This has also, unfortunately, been one of their major pain points for integration. Largely documented as the hallucination problem, if a model doesn't know an answer it will often make one up[citation needed]. Fairly early in the Large Language Model (LLM) era (the era preceeding the current LMM reasoning era), the technique of Retreival Augmented Generation (RAG) was purposed to address this failure case. As RAG techniques have improved, models have become more reliable and useful at tasks that can be clearly defined in documentation. 
 
-## 3. Data Sources for Retrieval
-- Types of plant databases considered
-- Information required (light, moisture, temperature, humidity)
-- Licensing and citation considerations (I have checked with perenual license policy and we are good to use it in our research as long as it remains a non-commercial, personal, or educational endeavor.)
+### RAG in Prior Research
 
-## 4. Proposed RAG Pipeline for This Project
+Researchers have developed numerous techniqes to ground models. The original technique was purposed shortly after "The ChatGPT Moment" in 2022, and there have been several advancements in the field as model architectures have matured (as there will be many more!). This was originally achieved by giving models access to documents directly in their context window[original facebook research], however more modern methods involve the use of databases[microsoft research] and tools[mit paper] that either automatically retrieve relevant information or allow the model to retrieve it on their own through the use of command line tools. This has increased model accuracy and reduced hallucinations in the current generation of models, improving their reliability in low-stakes production environments. 
 
-### 4.1 Input
+### Data Sources for Retrieval
+
+For our project we chose to use the database approach, as there were existing plant databases that gave us the atomic information we would need for various species of plant. By giving our model endpoint specific data on the light, moisture, temperature, and humidity requirements of a plant, and the sensor data from another database that we plan to store the sensor data in, we expect to be able to host a small model locally that will provide actionable feedback to users. We have elected to use a pre-existing database from perenual and pass that data along with our sensor database data to our model.
+
+### Proposed RAG Pipeline for This Project
+
+#### Input
+
 - Plant species
 - Environmental sensor data
+- Query from user application
 
-### 4.2 Retrieval Step
-- How plant care information is retrieved
-- Importance of grounding responses in retrieved content
+#### Retrieval Step
 
-### 4.3 Generation Step
-- How the LLM uses retrieved information
-- Explanation generation
+The model will be given sensor data for the last 24 hours from our database, and grounding data from the perenual database, the plant species.
 
-## 5. Citation and Traceability Strategy
-- How sources will be referenced
-- Importance of explainability and transparency
+#### Generation Step
 
-## 6. Evaluation Strategy
-- Correctness of retrieval
-- Consistency with source data
-- Handling missing or incomplete information
+The model will then be asked to interpret this data and provide a response for users to better care for their plants or encourage them to keep taking excellent care of their plants.
 
-## 7. Barriers and Risks
+### Citation and Traceability Strategy
+
+If deemed necessary we could ask the model to cite sensor data in its user response. We should also keep a log in our database of data sent to model and the model response for potential debugging later. 
+
+### Evaluation Strategy
+
+We will run test cases by giving the model stubbed sensor data, having it compare to the perenual data for a few given species, and capturing/logging/monitoring the output. 
+
+### Barriers and Risks
+
 - Incomplete datasets
 - Retrieval errors
 - Data quality issues
+- Incomplete sensor data
 
-## 8. Summary
-Summary of why RAG is essential for reliability in this project.
+### Summary
 
-## References
+RAG will take our project from "uses AI" to "integrates AI in a reliable way." By incorporating sensor data, known optimal plant conditions, and long term monitoring with LLMs, we can create an engaging user experience that will make interacting with houseplants more fufilling and engaging. Our project aims to give plants a voice that we can direct to a users phone, increasing plant integration into daily life. 
+
+### References
+
 [List peer-reviewed references in IEEE format]
+
