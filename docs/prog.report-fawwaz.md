@@ -50,14 +50,6 @@ In summary, the literature shows that plant health monitoring can be defined thr
 
 ## References
 [List peer-reviewed references in IEEE format]
-L. Wang, M. Xiao, X. Guo, Y. Yang, Z. Zhang, and C. Lee, “Sensing Technologies for Outdoor/Indoor Farming,” Biosensors, vol. 14, no. 12, p. 629, Dec. 2024, doi: 10.3390/bios14120629.
-​
-S. Wang, J. M. Baek, A. P. Lau, J. C. Quebedeaux, A. D. B. Leakey, and others, “Light-Stable, Ultrastretchable Wearable Strain Sensors for Versatile Plant Growth Monitoring,” ACS Sensors, vol. 10, no. 5, pp. 3390–3401, 2025, doi: 10.1021/acssensors.4c03104.
-​
-Y. Li et al., “A Personalized and Smart Flowerpot Enabled by 3D Printing and Cloud Technology for Ornamental Horticulture,” Sensors, vol. 23, no. 13, p. 6116, Jul. 2023, doi: 10.3390/s23136116.
-​
-M. Islam, A. K. M. Azad, S. E. Arman, S. A. Alyami, and M. M. Hasan, “PlantCareNet: an advanced system to recognize plant diseases with dual-mode recommendations for prevention,” Plant Methods, vol. 21, no. 1, p. 52, Apr. 2025, doi: 10.1186/s13007-025-01366-9.
-
 A. Fuentes et al., “Comprehensive Plant Health Monitoring: Expert-Level Assessment with Spatio-Temporal Image Data,” Frontiers in Plant Science, vol. 16, p. 1511651, 2025, doi: 10.3389/fpls.2025.1511651.
 
 R. Legendre, N. T. Basinger, and M. W. van Iersel, “Low-Cost Chlorophyll Fluorescence Imaging for Stress Detection,” Sensors, vol. 21, no. 6, p. 2055, Mar. 2021, doi: 10.3390/s21062055.
