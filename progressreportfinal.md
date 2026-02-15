@@ -111,11 +111,10 @@ Evaluation will combine unit tests, scenario-based tests, and qualitative review
 
 ## 8. Next Steps
 Planned activities for the next reporting period:
-- Finalize sensor selection (part numbers), assemble a breadboard prototype, and implement an initial calibration workflow for soil moisture.
+- Finalize sensor selection, assemble a breadboard prototype, and implement an initial calibration workflow for soil moisture.
 - Implement database schemas for plant profiles and sensor telemetry; populate profiles for a small set of target houseplant species.
-- Implement deterministic decision logic (thresholds + trend checks) and automated test cases using stubbed telemetry.
+- Implement deterministic decision logic and automated test cases using stubbed telemetry.
 - Integrate the explanation layer with controlled prompting, output validation, and fallback templates.
-- Run end-to-end demonstrations on at least two plant species and document observations for iteration.
 
 ## References (IEEE Style)
 \[1\] S. Adla, D. K. Rai, and V. V. Sarangi, “Laboratory calibration and performance evaluation of low-cost capacitive and very low-cost resistive soil moisture sensors,” *Sensors*, vol. 20, no. 2, p. 363, 2020, doi: 10.3390/s20020363.  
