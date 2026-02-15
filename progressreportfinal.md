@@ -116,7 +116,7 @@ Planned activities for the next reporting period:
 - Implement deterministic decision logic and automated test cases using stubbed telemetry.
 - Integrate the explanation layer with controlled prompting, output validation, and fallback templates.
 
-## References (IEEE Style)
+## References 
 \[1\] S. Adla, D. K. Rai, and V. V. Sarangi, “Laboratory calibration and performance evaluation of low-cost capacitive and very low-cost resistive soil moisture sensors,” *Sensors*, vol. 20, no. 2, p. 363, 2020, doi: 10.3390/s20020363.  
 \[2\] F. Beyaz and A. Gul, “Comparison of low-cost light sensors for agricultural applications,” *Brazilian Archives of Biology and Technology*, vol. 65, 2022, doi: 10.1590/1678-4324-2022210112.  
 \[3\] J. Pereira and N. M. Ramos, “Evaluation of low-cost environmental sensors for indoor monitoring applications,” *Journal of Building Engineering*, vol. 46, 2022, doi: 10.1016/j.jobe.2021.103824.  
