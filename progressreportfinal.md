@@ -90,7 +90,7 @@ Primary LLM risks include hallucination, overconfidence near decision thresholds
 The current architecture is organized into four layers:
 1. **Sensing Layer:** sensors measure soil moisture, temperature, humidity, and light.  
 2. **Data Layer:** sensor telemetry is stored in a database; plant profile data is stored in a relational database.  
-3. **Decision Layer:** backend services retrieve data, apply calibration/filtering, and execute deterministic rule + trend logic to classify state and recommend actions.  
+3. **Decision Layer:** backend services retrieve data, apply calibration/filtering, and execute deterministic rule and trend logic to classify state and recommend actions.  
 4. **Explanation Layer:** the LLM receives only the structured decision summary and generates a user-facing explanation.  
 
 ## 6. Evaluation Plan
