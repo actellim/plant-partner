@@ -1,0 +1,32 @@
+@startuml
+participant "User Application" as App
+participant "On-Device App" as DeviceApp
+database "Perenual Database" as Perenual
+database "Sensor Database" as SensorDB
+participant "RLLM Endpoint" as RLLM
+
+== Input & Retrieval Step ==
+App -> DeviceApp: User Query & Plant Species
+DeviceApp -> Perenual: SQL Lookup (Symbolic Retrieval)
+Perenual --> DeviceApp: Return Gold-Standard Plant Condition
+DeviceApp -> SensorDB: SQL Lookup
+SensorDB --> DeviceApp: Return Environmental Sensor Data
+
+== Generation Step ==
+DeviceApp -> DeviceApp: Combine Query, Sensor Data & Gold-Standard Data
+DeviceApp -> RLLM: Send Combined Payload
+RLLM -> RLLM: Cross-reference Sensor Data with Gold-Standard Data (Identify Deltas)
+RLLM -> RLLM: Formulate care optimization/reinforcement response
+RLLM --> DeviceApp: Return Diagnostic Response
+DeviceApp --> App: Display Response
+
+== Conversational Step (Future Turns) ==
+App -> DeviceApp: Follow-up Query
+DeviceApp -> RLLM: Forward Follow-up Query
+RLLM -> DeviceApp: Tool Request: Lookup arbitrary sensor information
+DeviceApp -> SensorDB: Execute Tool Lookup
+SensorDB --> DeviceApp: Return requested sensor data
+DeviceApp --> RLLM: Provide requested tool data
+RLLM --> DeviceApp: Return updated response
+DeviceApp --> App: Display updated response
+@enduml
