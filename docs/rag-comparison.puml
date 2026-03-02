@@ -1,0 +1,63 @@
+@startuml
+skinparam componentStyle rectangle
+skinparam padding 2
+
+package "Modern Standalone LLM Architecture" {
+    [User Input] as input1
+    
+    component "LLM Core" as core1 {
+        [Tokenizer & Embedding] as embed1
+        component "Transformer Blocks\n(Self-Attention & MLP)\n<i>[Parametric Memory]</i>" as blocks1
+        [Language Modeling Head\n(Softmax Probabilities)] as head1
+    }
+    
+    [Generated Response] as resp1
+    
+    input1 --> embed1
+    embed1 --> blocks1
+    blocks1 --> head1
+    head1 --> resp1
+    
+    note right of blocks1
+      Knowledge is implicitly 
+      stored within the trained 
+      weights of the network.
+    end note
+}
+
+package "Original 2020 RAG Architecture (Lewis et al.)" {
+    [User Input] as input2
+    
+    component "Retriever (DPR)" as dpr {
+        [Query Encoder (BERT)] as q_enc
+        database "Document Index\n<i>[Non-Parametric Memory]</i>" as index
+        [Maximum Inner Product Search\n(MIPS)] as mips
+    }
+    
+    [Top-K Documents] as topk
+    
+    component "Generator (BART)" as bart {
+        component "Seq2Seq Transformer\n<i>[Parametric Memory]</i>" as seq2seq
+    }
+    
+    [Marginalization\n(Sequence or Token level)] as margin
+    [Generated Response] as resp2
+    
+    input2 --> q_enc
+    index -> mips
+    q_enc --> mips
+    mips --> topk
+    
+    input2 ---> seq2seq : Concatenated
+    topk ---> seq2seq : Concatenated
+    
+    seq2seq --> margin
+    margin --> resp2
+    
+    note right of index
+      External explicitly 
+      stored knowledge 
+      (e.g., Wikipedia).
+    end note
+}
+@enduml
