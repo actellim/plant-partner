@@ -1,0 +1,69 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/29.6.1 Chrome/142.0.7444.265 Electron/39.8.0 Safari/537.36" version="29.6.1">
+  <diagram name="Page-1" id="JUkWgzkLU4Yx3gKZR1e2">
+    <mxGraphModel dx="2583" dy="1454" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="1920" pageHeight="1200" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="PMTueYythCXaI7lvb4JJ-37" edge="1" parent="1" source="PMTueYythCXaI7lvb4JJ-10" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="PMTueYythCXaI7lvb4JJ-19">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="PMTueYythCXaI7lvb4JJ-10" parent="1" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.database;whiteSpace=wrap;fontFamily=Courier New;fontSize=20;" value="Plant Partner DB" vertex="1">
+          <mxGeometry height="180" width="120" x="650" y="-190" as="geometry" />
+        </mxCell>
+        <mxCell id="PMTueYythCXaI7lvb4JJ-20" edge="1" parent="1" source="PMTueYythCXaI7lvb4JJ-14" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Courier New;fontSize=20;" target="PMTueYythCXaI7lvb4JJ-19">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="PMTueYythCXaI7lvb4JJ-23" connectable="0" parent="PMTueYythCXaI7lvb4JJ-20" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontFamily=Courier New;fontSize=20;" value="&lt;div&gt;User Query&lt;/div&gt;Tool Call" vertex="1">
+          <mxGeometry relative="1" x="-0.0702" y="-1" as="geometry">
+            <mxPoint y="1" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="PMTueYythCXaI7lvb4JJ-14" parent="1" style="sketch=0;outlineConnect=0;fontColor=default;gradientColor=none;fillColor=#01A88D;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=20;fontStyle=0;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.sagemaker_model;fontFamily=Courier New;" value="LLM" vertex="1">
+          <mxGeometry height="78" width="78" x="671" y="500" as="geometry" />
+        </mxCell>
+        <mxCell id="PMTueYythCXaI7lvb4JJ-21" edge="1" parent="1" source="PMTueYythCXaI7lvb4JJ-19" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Courier New;fontSize=20;" target="PMTueYythCXaI7lvb4JJ-10">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="PMTueYythCXaI7lvb4JJ-24" connectable="0" parent="PMTueYythCXaI7lvb4JJ-21" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontFamily=Courier New;fontSize=20;" value="Parsed Request&lt;div&gt;Return Results&lt;/div&gt;" vertex="1">
+          <mxGeometry relative="1" x="-0.1231" as="geometry">
+            <mxPoint y="1" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="PMTueYythCXaI7lvb4JJ-36" edge="1" parent="1" source="PMTueYythCXaI7lvb4JJ-19" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="PMTueYythCXaI7lvb4JJ-14">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="PMTueYythCXaI7lvb4JJ-38" edge="1" parent="1" source="PMTueYythCXaI7lvb4JJ-19" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="PMTueYythCXaI7lvb4JJ-34">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="PMTueYythCXaI7lvb4JJ-19" parent="1" style="ellipse;whiteSpace=wrap;html=1;fontFamily=Courier New;fontSize=20;" value="Backend(Program)" vertex="1">
+          <mxGeometry height="171" width="250" x="190" y="140" as="geometry" />
+        </mxCell>
+        <mxCell id="PMTueYythCXaI7lvb4JJ-29" edge="1" parent="1" source="PMTueYythCXaI7lvb4JJ-26" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Courier New;fontSize=20;" target="PMTueYythCXaI7lvb4JJ-34">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="PMTueYythCXaI7lvb4JJ-30" connectable="0" parent="PMTueYythCXaI7lvb4JJ-29" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontFamily=Courier New;fontSize=20;" value="Asks a question" vertex="1">
+          <mxGeometry relative="1" x="0.0936" y="1" as="geometry">
+            <mxPoint y="1" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="PMTueYythCXaI7lvb4JJ-26" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontFamily=Courier New;fontSize=20;" value="User" vertex="1">
+          <mxGeometry height="130" width="60" x="-590" y="154.5" as="geometry" />
+        </mxCell>
+        <mxCell id="PMTueYythCXaI7lvb4JJ-35" edge="1" parent="1" source="PMTueYythCXaI7lvb4JJ-34" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="PMTueYythCXaI7lvb4JJ-19">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="PMTueYythCXaI7lvb4JJ-44" connectable="0" parent="PMTueYythCXaI7lvb4JJ-35" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="&lt;font face=&quot;Courier New&quot; style=&quot;font-size: 20px;&quot;&gt;Route Question&lt;/font&gt;&lt;div&gt;&lt;font face=&quot;Courier New&quot; style=&quot;font-size: 20px;&quot;&gt;Return Answer&lt;/font&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry relative="1" x="-0.1682" y="1" as="geometry">
+            <mxPoint x="-1" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="PMTueYythCXaI7lvb4JJ-34" parent="1" style="ellipse;whiteSpace=wrap;html=1;" value="&lt;font face=&quot;Courier New&quot; style=&quot;font-size: 20px;&quot;&gt;Frontend&lt;/font&gt;" vertex="1">
+          <mxGeometry height="115" width="190" x="-300" y="162" as="geometry" />
+        </mxCell>
+        <mxCell id="PMTueYythCXaI7lvb4JJ-43" parent="1" style="shape=umlFrame;whiteSpace=wrap;html=1;pointerEvents=0;width=280;height=90;" value="&lt;font style=&quot;font-size: 24px;&quot; face=&quot;Courier New&quot;&gt;Plant Partner&lt;/font&gt;" vertex="1">
+          <mxGeometry height="580" width="780" x="-320" y="-80" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
