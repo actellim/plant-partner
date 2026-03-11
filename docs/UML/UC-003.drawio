@@ -1,0 +1,28 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/29.6.1 Chrome/142.0.7444.265 Electron/39.8.0 Safari/537.36" version="29.6.1">
+  <diagram name="Page-1" id="RRlIzoZIWnk8axKCcbsA">
+    <mxGraphModel dx="1426" dy="843" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="1920" pageHeight="1200" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="BgSeQQy93QZRmj0IBMv8-6" edge="1" parent="1" source="BgSeQQy93QZRmj0IBMv8-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Courier New;fontSize=18;" target="BgSeQQy93QZRmj0IBMv8-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="BgSeQQy93QZRmj0IBMv8-1" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontFamily=Courier New;fontSize=18;" value="User" vertex="1">
+          <mxGeometry height="130" width="60" x="180" y="245" as="geometry" />
+        </mxCell>
+        <mxCell id="BgSeQQy93QZRmj0IBMv8-7" edge="1" parent="1" source="BgSeQQy93QZRmj0IBMv8-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Courier New;fontSize=18;" target="BgSeQQy93QZRmj0IBMv8-4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="BgSeQQy93QZRmj0IBMv8-2" parent="1" style="ellipse;whiteSpace=wrap;html=1;fontFamily=Courier New;fontSize=18;" value="Declares Expertise Level&lt;div&gt;(Frontend)&lt;/div&gt;" vertex="1">
+          <mxGeometry height="135" width="210" x="400" y="242.5" as="geometry" />
+        </mxCell>
+        <mxCell id="BgSeQQy93QZRmj0IBMv8-4" parent="1" style="ellipse;whiteSpace=wrap;html=1;fontFamily=Courier New;fontSize=18;" value="Updates System Message to Model&lt;div&gt;(Backend)&lt;/div&gt;" vertex="1">
+          <mxGeometry height="140" width="210" x="730" y="240" as="geometry" />
+        </mxCell>
+        <mxCell id="BgSeQQy93QZRmj0IBMv8-5" parent="1" style="shape=umlFrame;whiteSpace=wrap;html=1;pointerEvents=0;width=130;height=50;fontFamily=Courier New;fontSize=18;" value="Plant Partner" vertex="1">
+          <mxGeometry height="460" width="650" x="350" y="80" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
