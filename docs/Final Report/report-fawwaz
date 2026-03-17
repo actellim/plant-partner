@@ -1,0 +1,19 @@
+Fawwaz – Decision Logic 
+1. Input Data
+
+(Explain the inputs used by the system, including simulated sensor values and plant specific ideal ranges )
+
+
+2. Health Classification
+
+(Describe how the system classifies plant condition as healthy, near stress or stressed)
+
+
+3. Decision Process
+
+(Explain how thresholds and comparisons were used to evaluate plant condition. Describe the rule based logic)
+
+
+4. Example Output
+
+(Provide an example showing input values and the resulting classification. Include a table or simple flow diagram showing input → decision)
