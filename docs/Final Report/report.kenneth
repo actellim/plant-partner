@@ -1,0 +1,24 @@
+Kenneth – LLM Explanation
+1. Input to the LLM
+
+(Explain what structured data was sent to the LLM, including plant name, sensor values, ideal ranges and decision output)
+
+
+2. Explanation Generation
+
+(Describe how the LLM was used to convert structured data into a natural language explanation)
+
+
+3. Output Control
+
+(Explain how the LLM was constrained so that it did not make decisions, but only generated explanations based on system output)
+
+
+4. Example Output
+
+(Provide an example showing structured input and the generated explanation)
+
+
+5. Fallback Mechanism
+
+(Explain what happens if the LLM is unavailable, such as using a predefined template response  )
