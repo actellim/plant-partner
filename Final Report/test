@@ -1,1 +1,19 @@
-test
+- Abstract
+- Introduction
+  - Can summarize the literature review here; shouldn't be a copy, need to move forward.
+  - Add the section about how we adjust for user skill level (self-identified) here.
+- Work Done
+  - This is where we should be putting our UML, structure, etc; visual aides.
+  - Charts of plant growth/user engagement.
+  - Should prove our assumptions.
+  - SWE safe-guards, implementation details.
+  - We need details on how our systems work, not just make declerations.
+- Results and Discussion
+  - Implementation details, test results.
+- Conclusion
+  - Professional Accountability can weigh in here.
+  - How does our work relate to the big picture (What did we learn about AI integration)?
+  - Ethical Considerations (safety guardrails: can people use our system to build a bomb or something).
+- Acknowledgement (optional, skip this? people who really helped with the project work.)
+- References
+  - We can look for additional papers on AI and user engagement, or adjusting to user skill?

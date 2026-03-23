@@ -1,0 +1,54 @@
+@startuml
+
+title RAG-Optimized Consolidated Plant Data Schema (Source-Aware)
+
+entity "Consolidated_Plant" as plant {
+  * id : UUID <<PK>>
+  --
+  * scientific_name_primary : String (Preserved original full string)
+  * common_name_primary : String
+  --
+  == Source: USDA PLANTS (Public Domain) ==
+  * usda_traits : JSON
+    -- moisture_use : String (e.g. "High", "Low")
+    -- min_temp_f : Float
+    -- drought_tolerance : String
+    -- shade_tolerance : String
+    -- precipitation_min : Float
+    -- precipitation_max : Float
+  --
+  == Source: PFAF (CC-BY 4.0) ==
+  * pfaf_traits : JSON
+    -- hardiness_zone : String (e.g. "5-9")
+    -- moisture_code : String (e.g. "DM")
+    -- shade_code : String (e.g. "SN")
+    -- care_requirements : Array[String] (e.g. ["Well drained soil"])
+  * pfaf_descriptions : JSON
+    -- summary : Text
+    -- habitats : Text
+    -- cultivation : Text
+    -- edible_uses : Text
+    -- medicinal_uses : Text
+  --
+  == Provenance & Metadata ==
+  * attributions : Array[Attribution]
+}
+
+entity "Attribution" as attr {
+  * source : String ("USDA" or "PFAF")
+  * license : String ("Public Domain" or "CC-BY 4.0")
+  * url : String
+  * original_scientific_name : String
+}
+
+plant ||--o{ attr : "tracks provenance"
+
+package "Source Artifacts" {
+  entity "usda_data.jsonl" as usda <<File>>
+  entity "pfaf_data.jsonl" as pfaf <<File>>
+}
+
+usda ..> plant : "Enriches usda_traits"
+pfaf ..> plant : "Enriches pfaf_traits/descriptions"
+
+@enduml
