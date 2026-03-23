@@ -8,8 +8,13 @@ PFAF_FILE = 'pfaf_data.jsonl'
 OUTPUT_FILE = 'merged_plants.jsonl'
 DEBUG_FILE = 'match_debug.json'
 
-# Tune this based on log review.
-FUZZY_THRESHOLD = 95
+# Thresholds for calibration
+GENUS_THRESHOLD = 90
+SPECIES_THRESHOLD_BASE = 90
+
+# Near-miss logging thresholds
+GENUS_NEAR_MISS = 85
+SPECIES_NEAR_MISS = 80
 
 def clean_scientific_name(name):
     """Strips authors and HTML tags to get the base botanical name."""
@@ -47,102 +52,98 @@ def merge_datasets():
     print("Loading datasets...")
     usda_records = load_jsonl(USDA_FILE)
     pfaf_records = load_jsonl(PFAF_FILE)
-    
-    # Pre-filter USDA records
     usda_records = [r for r in usda_records if not (r.get('not_found') or r.get('error'))]
     
     print(f"Loaded {len(usda_records)} USDA and {len(pfaf_records)} PFAF records.")
     
     pfaf_lookup = {}
-    pfaf_cleaned_names = []
+    pfaf_genera_map = {}
     for p in pfaf_records:
         cleaned = clean_scientific_name(p['scientific_name']).lower()
         pfaf_lookup[cleaned] = p
-        pfaf_cleaned_names.append(cleaned)
+        genus = cleaned.split()[0]
+        if genus not in pfaf_genera_map: pfaf_genera_map[genus] = []
+        pfaf_genera_map[genus].append(cleaned)
 
+    pfaf_genera_list = list(pfaf_genera_map.keys())
     merged_results = []
     pfaf_merged_keys = set()
     match_debug = []
     
-    stats = {
-        "exact": 0,
-        "hierarchical": 0,
-        "fuzzy": 0,
-        "none": 0
-    }
+    stats = {"exact": 0, "hierarchical": 0, "fuzzy": 0, "none": 0}
 
-    print(f"Merging records (Threshold: {FUZZY_THRESHOLD})...")
+    print(f"Merging records (Prefix Guard active)...")
     
     for usda in usda_records:
         original_name = usda['scientificName']
         cleaned_name = clean_scientific_name(original_name).lower()
         base_species = get_base_species(cleaned_name).lower()
+        usda_parts = cleaned_name.split()
+        usda_genus = usda_parts[0] if usda_parts else ""
         
         match = None
         match_type = None
         match_score = 100
         
-        # 1. Exact Match
         if cleaned_name in pfaf_lookup:
             match = pfaf_lookup[cleaned_name]
             match_type = "exact"
-        # 2. Hierarchical Match
         elif base_species in pfaf_lookup:
             match = pfaf_lookup[base_species]
             match_type = "hierarchical"
-        # 3. Fuzzy Match
-        else:
-            best_match, score = process.extractOne(cleaned_name, pfaf_cleaned_names, scorer=fuzz.token_sort_ratio)
+        elif usda_genus:
+            best_genera_res = process.extract(usda_genus, pfaf_genera_list, scorer=fuzz.ratio, limit=3)
+            valid_genera_res = [res for res in best_genera_res if res[1] >= GENUS_THRESHOLD]
             
-            # Token-length guard: If the species epithet is short, a 1-2 letter difference
-            # (like 'rigida' vs 'frigida') yields a high score but is a different species.
-            # We require a higher score (e.g., 98) for short words, or we reject if the 
-            # absolute difference in characters is too impactful.
-            is_valid_fuzzy = False
-            if score >= FUZZY_THRESHOLD:
-                # Compare the specific epithets (second word)
-                usda_parts = cleaned_name.split()
-                pfaf_parts = best_match.split()
+            if valid_genera_res:
+                candidates = []
+                for g, g_score in valid_genera_res:
+                    candidates.extend(pfaf_genera_map[g])
                 
-                if len(usda_parts) >= 2 and len(pfaf_parts) >= 2:
-                    usda_epithet = usda_parts[1]
-                    pfaf_epithet = pfaf_parts[1]
+                if candidates:
+                    best_match, score = process.extractOne(cleaned_name, candidates, scorer=fuzz.token_sort_ratio)
                     
-                    # If it's a very short epithet, a 1-character change is too risky
-                    if len(usda_epithet) <= 7 or len(pfaf_epithet) <= 7:
-                        # Require a near-perfect match for short epithets
-                        if score >= 98:
-                            is_valid_fuzzy = True
+                    is_valid_fuzzy = False
+                    if score >= SPECIES_THRESHOLD_BASE:
+                        pfaf_parts = best_match.split()
+                        if len(usda_parts) >= 2 and len(pfaf_parts) >= 2:
+                            u_epithet = usda_parts[1]
+                            p_epithet = pfaf_parts[1]
+                            # PREFIX GUARD: Most valid spelling variations share the first 3 characters.
+                            # This correctly filters cana/cina (c match only) and rigida/frigida (r vs f).
+                            u_pref = u_epithet[:3]
+                            p_pref = p_epithet[:3]
+                            if u_pref == p_pref:
+                                is_valid_fuzzy = True
+                            # Fallback for very short species names (identical match)
+                            elif len(u_epithet) <= 3 and u_epithet == p_epithet:
+                                is_valid_fuzzy = True
+                        else:
+                            is_valid_fuzzy = True # Genus-only matches or hybrids
+                    
+                    if is_valid_fuzzy:
+                        match = pfaf_lookup[best_match]
+                        match_type = "fuzzy"
+                        match_score = score
                     else:
-                        # For longer epithets, the 95 threshold is generally safe
-                        is_valid_fuzzy = True
-                else:
-                    # Single word genus matches (rare, but just in case)
-                    is_valid_fuzzy = True
-
-            if is_valid_fuzzy:
-                match = pfaf_lookup[best_match]
-                match_type = "fuzzy"
-                match_score = score
-            else:
-                match_type = "none"
+                        match_type = "none"
+                        if score >= SPECIES_NEAR_MISS:
+                            match_debug.append({"type": "rejected_species_fuzzy", "score": score, "usda_name": original_name, "pfaf_match": pfaf_lookup[best_match]['scientific_name']})
+                else: match_type = "none"
+            else: match_type = "none"
+        else: match_type = "none"
 
         stats[match_type] += 1
-
         if match:
-            match_debug.append({
-                "type": match_type,
-                "score": match_score,
-                "usda_name": original_name,
-                "pfaf_match": match['scientific_name']
-            })
+            match_debug.append({"type": match_type, "score": match_score, "usda_name": original_name, "pfaf_match": match['scientific_name']})
+            pfaf_merged_keys.add(clean_scientific_name(match['scientific_name']).lower())
 
         consolidated = {
             "scientific_name_primary": original_name,
             "common_name_primary": usda.get('commonName'),
             "usda_traits": usda.get('traits'),
-            "pfaf_traits": None,
-            "pfaf_descriptions": None,
+            "pfaf_traits": match.get("traits") if match else None,
+            "pfaf_descriptions": match.get("descriptions") if match else None,
             "attributions": [{
                 "source": "USDA PLANTS",
                 "license": "Public Domain",
@@ -150,30 +151,17 @@ def merge_datasets():
                 "original_scientific_name": original_name
             }]
         }
-
         if match:
-            match_key = clean_scientific_name(match['scientific_name']).lower()
-            pfaf_merged_keys.add(match_key)
-            consolidated["pfaf_traits"] = match.get("traits")
-            consolidated["pfaf_descriptions"] = match.get("descriptions")
-            
             pfaf_attr = match["attributions"][0].copy()
-            if match_type == "hierarchical":
-                pfaf_attr["note"] = f"Inherited from parent species: {match['scientific_name']}"
-            elif match_type == "fuzzy":
-                pfaf_attr["note"] = f"Fuzzy match (score: {match_score}) with: {match['scientific_name']}"
-            
+            if match_type == "hierarchical": pfaf_attr["note"] = f"Inherited from parent species: {match['scientific_name']}"
+            elif match_type == "fuzzy": pfaf_attr["note"] = f"Fuzzy match (score: {match_score}) with: {match['scientific_name']}"
             consolidated["attributions"].append(pfaf_attr)
-            if not consolidated["common_name_primary"]:
-                consolidated["common_name_primary"] = match.get("common_name")
-
+            if not consolidated["common_name_primary"]: consolidated["common_name_primary"] = match.get("common_name")
         merged_results.append(consolidated)
 
-    # Add orphans
     orphan_count = 0
-    for cleaned_name in pfaf_cleaned_names:
+    for cleaned_name, p in pfaf_lookup.items():
         if cleaned_name not in pfaf_merged_keys:
-            p = pfaf_lookup[cleaned_name]
             merged_results.append({
                 "scientific_name_primary": p['scientific_name'],
                 "common_name_primary": p.get('common_name'),
@@ -185,23 +173,14 @@ def merge_datasets():
             orphan_count += 1
 
     with open(OUTPUT_FILE, 'w', encoding='utf-8') as f:
-        for r in merged_results:
-            f.write(json.dumps(r) + '\n')
-            
+        for r in merged_results: f.write(json.dumps(r) + '\n')
     with open(DEBUG_FILE, 'w', encoding='utf-8') as f:
         json.dump(match_debug, f, indent=2)
 
-    print(f"\n--- Merge Summary (USDA -> PFAF) ---")
-    print(f"Exact Matches:        {stats['exact']}")
-    print(f"Hierarchical Matches:  {stats['hierarchical']}")
-    print(f"Fuzzy Matches:         {stats['fuzzy']}")
-    print(f"No Match:              {stats['none']}")
-    print(f"------------------------------------")
-    print(f"Total Joins:           {stats['exact'] + stats['hierarchical'] + stats['fuzzy']}")
-    print(f"Standalone PFAF:       {orphan_count}")
-    print(f"Total Final Records:   {len(merged_results)}")
-    print(f"\nOutput: {OUTPUT_FILE}")
-    print(f"Review all matches in: {DEBUG_FILE}")
+    print(f"\n--- Merge Summary ---")
+    print(f"Exact: {stats['exact']} | Hierarchical: {stats['hierarchical']} | Fuzzy: {stats['fuzzy']} | No Match: {stats['none']}")
+    print(f"Total Joins: {stats['exact'] + stats['hierarchical'] + stats['fuzzy']}")
+    print(f"Standalone PFAF: {orphan_count} | Total Records: {len(merged_results)}")
 
 if __name__ == "__main__":
     merge_datasets()
