@@ -24,3 +24,4 @@ We need to grab the raw data from these databases and do our best to merge it. T
 6. Merge data into a single monolithic CC database with proper attribution.
 7. Remove entries with incomplete care requirements.
 8. Convert the `.jsonl` object into a database object.
+9. Add responses table and images with customer plants.
