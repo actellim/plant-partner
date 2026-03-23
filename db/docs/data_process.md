@@ -27,8 +27,17 @@ This document outlines the engineering steps taken to acquire, normalize, and me
   4. **Pass B (Species):** For valid genera, perform a fuzzy match on the **Full Name** (90+ threshold) with an additional **Prefix Guard**.
      - **Prefix Guard:** The first 3 characters of the species epithet must match exactly (e.g., `aug` for `augustum`). This correctly filters out similar but distinct same-genus species (e.g., *Artemisia cana* vs *cina*).
 - **Provenance:** Every record in the final output contains an `attributions` array documenting the source database, the original scientific name provided by that source, and the respective license to ensure copyright compliance.
-- **Output:** `merged_plants.jsonl` (RAG-optimized JSON structure).
+- **Base Artifact:** `merged_plants.jsonl` (Full consolidated dataset of 53,013 records).
 
-## 4. Dependencies
+## 4. Database Optimization
+- **Tool:** `src/filter_plants.py`.
+- **Optimization Strategy:** To ensure high-quality RAG results and faster search performance, a high-density subset of the data was created.
+  - **Criteria (Strict AND):** A record is only retained if it contains data for **ALL THREE** of the following characteristics (from either source):
+    1. **Moisture:** (e.g., `moistureUse`, `precipitationMin`, or `moisture`)
+    2. **Temperature:** (e.g., `minTempF` or `hardiness_zone`)
+    3. **Light:** (e.g., `shadeTolerance` or `shade`)
+  - **Optimized Artifact:** `merged_plants_optimized.jsonl` (11,383 records).
+
+## 5. Dependencies
 - **Python Environment:** Managed via `uv`.
 - **Key Libraries:** `thefuzz`, `python-Levenshtein`.
