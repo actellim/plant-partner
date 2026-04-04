@@ -25,3 +25,10 @@ We need to grab the raw data from these databases and do our best to merge it. T
 7. Remove entries with incomplete care requirements.
 8. Convert the `.jsonl` object into a database object.
 9. Add responses table and images with customer plants.
+
+- Literature Review/Analysis 
+  - Can summarize the literature review for analysis.
+  - Don't repeat a lot of things from the progress report.
+  - Summary is fine, new info can go here.
+  - Should be a balance between summary and full explaination.
+- Be sure you align with the rubric before you submit.
