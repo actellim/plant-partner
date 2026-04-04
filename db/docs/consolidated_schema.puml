@@ -41,7 +41,28 @@ entity "Attribution" as attr {
   * original_scientific_name : String
 }
 
+entity "User_Plant" as user_plant {
+  * plant_id : UUID <<PK>>
+  --
+  * species_id : UUID <<FK>> (Consolidated_Plant.id)
+  * nickname : String
+  * created_at : Timestamp
+}
+
+entity "Sensor_Reading" as reading {
+  * reading_id : UUID <<PK>>
+  --
+  * plant_id : UUID <<FK>> (User_Plant.plant_id)
+  * moisture : Float
+  * temperature : Float
+  * humidity : Float
+  * light : Float
+  * timestamp : Timestamp
+}
+
 plant ||--o{ attr : "tracks provenance"
+plant ||--o{ user_plant : "is species of"
+user_plant ||--o{ reading : "has readings"
 
 package "Source Artifacts" {
   entity "usda_data.jsonl" as usda <<File>>
