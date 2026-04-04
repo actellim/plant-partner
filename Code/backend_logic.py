@@ -130,16 +130,7 @@ class PlantMonitor:
             return MOCK_SPECIES.get(species_id)
         else:
             return self.db.get_species(species_id)
-
-
-    def _get_current_sensors(self, plant_id: str) -> Dict:
-        """Get current sensor readings from database (for now its mock)"""
-        if self.use_mock_db:
-            # will be replaced with database call when ready
-            return MOCK_CURRENT_SENSORS.get(plant_id)
-        else:
-            return self.db.get_sensor_reading(plant_id)
-
+            
 
     def _get_sensor_history(self, plant_id: str, days: int = 7) -> List[Dict]:
         """Get historical sensor data from database (for now its mock)"""
