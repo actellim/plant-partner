@@ -51,7 +51,7 @@ class PlantDatabase:
 
 
     # Get all the user's plants
-    def get_all_plants(self):
+    def get_all_plants(self, user_id):
         with self._get_connection() as conn:
             cursor = conn.cursor()
             cursor.execute("SELECT * FROM User_Plant")
@@ -61,7 +61,7 @@ class PlantDatabase:
 
 
     # Fetch a users plant
-    def get_plant(self, plant_id):
+    def get_plant(self, user_id, plant_id):
         with self._get_connection() as conn:
             cursor = conn.cursor()
             cursor.execute("SELECT * FROM User_Plant WHERE plant_id = ?", 
@@ -148,8 +148,17 @@ class PlantDatabase:
             return [dict(row) for row in cursor.fetchall()]
 
     
+    # User Queries--------------------------------------------------------------------
 
-    
-    
-    
+    def get_audience_level(self, user_id):
+        return "beginner"
 
+    def save_audience_level(self, user_id, audience_level_arg):
+        continue
+    
+    # LLM Logging---------------------------------------------------------------------
+    def save_llm_response(self, plant_id, species_id, audience_level, sensors, species_thresholds, alerts, history, recommendation_text, recommendation_source, timestamp):
+        continue
+
+    def get_llm_responses(self, plant_id, time_start, time_end):
+        continue
