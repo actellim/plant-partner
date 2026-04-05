@@ -171,7 +171,7 @@ class PlantMonitor:
             timestamp=sensors.get("timestamp") or datetime.now().isoformat(),
         )
 
-    def _get_audience_level(self, plant_id: str, audience_level_arg: Optional[str]) -> str:
+    def _get_audience_level(self, user_id: str, audience_level_arg: Optional[str]) -> str:
         """
         Determine the audience level for this plant/user.
 
@@ -183,12 +183,12 @@ class PlantMonitor:
         # 1) Use the explicit value, and persist it if we have a real DB
         if audience_level_arg is not None:
             if not self.use_mock_db and hasattr(self.db, "save_audience_level"):
-                self.db.save_audience_level(plant_id, audience_level_arg)
+                self.db.save_audience_level(user_id, audience_level_arg)
             return audience_level_arg
 
         # 2) Try pulling a stored value from DB
         if not self.use_mock_db and hasattr(self.db, "get_audience_level"):
-            stored = self.db.get_audience_level(plant_id)
+            stored = self.db.get_audience_level(user_id)
             if stored:
                 return stored
 
