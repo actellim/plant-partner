@@ -1,8 +1,6 @@
 
 from datetime import datetime, timedelta
 from typing import Dict, List, Tuple, Optional
-import openrouter_llm
-import db_api
 
 # MOCK DATA (for testing without database)
 
