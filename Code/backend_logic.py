@@ -1,6 +1,8 @@
 
 from datetime import datetime, timedelta
 from typing import Dict, List, Tuple, Optional
+import openrouter_llm
+import db_api
 
 # MOCK DATA (for testing without database)
 
@@ -134,9 +136,11 @@ class PlantMonitor:
     def _get_current_sensors(self, plant_id: str) -> Dict:
         """Get current sensor readings from database (for now its mock)"""
         if self.use_mock_db:
+            # will be replaced with database call when ready
             return MOCK_CURRENT_SENSORS.get(plant_id)
         else:
-            return
+            # get the most recent reading from the database
+            return self.db.get_current_sensor_data(plant_id)
             
 
     def _get_sensor_history(self, plant_id: str, days: int = 7) -> List[Dict]:
@@ -168,6 +172,30 @@ class PlantMonitor:
             light=sensors.get("light"),
             timestamp=sensors.get("timestamp") or datetime.now().isoformat(),
         )
+
+    def _get_audience_level(self, plant_id: str, audience_level_arg: Optional[str]) -> str:
+        """
+        Determine the audience level for this plant/user.
+
+        Priority:
+        1. If the caller passes an audience_level, use it and save to DB (when available).
+        2. Otherwise, try to load a stored value from the database.
+        3. Fallback to 'beginner'.
+        """
+        # 1) Use the explicit value, and persist it if we have a real DB
+        if audience_level_arg is not None:
+            if not self.use_mock_db and hasattr(self.db, "save_audience_level"):
+                self.db.save_audience_level(plant_id, audience_level_arg)
+            return audience_level_arg
+
+        # 2) Try pulling a stored value from DB
+        if not self.use_mock_db and hasattr(self.db, "get_audience_level"):
+            stored = self.db.get_audience_level(plant_id)
+            if stored:
+                return stored
+
+        # 3) Default
+        return "beginner"
 
 
     # 1. THRESHOLD CHECKING ALGORITHM
@@ -264,6 +292,8 @@ class PlantMonitor:
 
     def generate_recommendation(
         self,
+        plant_id: str,
+        species_id: str,
         plant_name: str,
         species_name: str,
         sensors: Dict,
@@ -283,19 +313,41 @@ class PlantMonitor:
 
         # CASE 1: Everything is fine
         if len(alerts) == 0 and len(trends) == 0:
-            return {
+            rec = {
                 "text": f"Your {species_name} is healthy! All sensor readings are within optimal ranges. Keep up the good care!",
                 "priority": "none",
                 "source": "system",
             }
+            self._log_llm_response(
+                plant_id=plant_id,
+                species_id=species_id,
+                audience_level=audience_level,
+                sensors=sensors,
+                species_thresholds=species_thresholds,
+                alerts=alerts,
+                history=history,
+                recommendation=rec,
+            )
+            return rec
 
         # CASE 2: Single simple problem - use rule (no LLM call needed)
         if len(alerts) == 1 and len(trends) == 0:
-            return {
+            rec = {
                 "text": alerts[0]["action"],
                 "priority": alerts[0]["severity"],
                 "source": "rule_based",
             }
+            self._log_llm_response(
+                plant_id=plant_id,
+                species_id=species_id,
+                audience_level=audience_level,
+                sensors=sensors,
+                species_thresholds=species_thresholds,
+                alerts=alerts,
+                history=history,
+                recommendation=rec,
+            )
+            return rec
 
         # CASE 3: Use LLM for more complex situations
         if self.llm is not None:
@@ -336,11 +388,22 @@ class PlantMonitor:
                 recommendation_text = self.llm.generate_explanation(llm_data)
                 priority = "high" if any(a["severity"] == "high" for a in alerts) else "medium"
 
-                return {
+                rec = {
                     "text": recommendation_text,
                     "priority": priority,
                     "source": "llm",
                 }
+                self._log_llm_response(
+                    plant_id=plant_id,
+                    species_id=species_id,
+                    audience_level=audience_level,
+                    sensors=sensors,
+                    species_thresholds=species_thresholds,
+                    alerts=alerts,
+                    history=history,
+                    recommendation=rec,
+                )
+                return rec
 
             except Exception as e:
                 print(f"LLM error: {e}")
@@ -349,14 +412,24 @@ class PlantMonitor:
         # CASE 4: Fallback - combine all actions if LLM is unavailable or fails
         actions = [a["action"] for a in alerts]
         recommendation_text = f"Your {species_name} needs attention. " + " ".join(actions)
-        
         priority = "high" if any(a["severity"] == "high" for a in alerts) else "medium"
 
-        return {
+        rec = {
             "text": recommendation_text,
             "priority": priority,
             "source": "rule_based_fallback",
         }
+        self._log_llm_response(
+            plant_id=plant_id,
+            species_id=species_id,
+            audience_level=audience_level,
+            sensors=sensors,
+            species_thresholds=species_thresholds,
+            alerts=alerts,
+            history=history,
+            recommendation=rec,
+        )
+        return rec
 
 
     # 4. MAIN MONITORING FUNCTION
@@ -380,24 +453,29 @@ class PlantMonitor:
 
         species = self._get_species_data(plant["species_id"])
 
-        # Step 2: Get current sensor readings
+        # Get the audience level
+        audience_level = self._get_audience_level(plant_id, audience_level)
+
+        # Get current sensor readings
         sensors = self._get_current_sensors(plant_id)
 
-        # Step 2.5: Log this reading to history (DB later, mock now)
+        # Log this reading to history (DB later, mock now)
         self._log_sensor_reading(plant_id, sensors)
 
-        # Step 3: Run threshold checking (current problems)
+        # Run threshold checking (current problems)
         alerts = self.check_thresholds(sensors, species["thresholds"])
 
-        # Step 4: Fetch history for LLM (no backend trend analysis)
+        # Fetch history for LLM (no backend trend analysis)
         history = self._get_sensor_history(plant_id, days=7)
         trends: List[Dict] = []  # trend analysis is delegated to the LLM
 
-        # Step 5: Calculate health score (based only on alerts for now)
+        # Calculate health score (based only on alerts for now)
         health_status, health_score = self.calculate_health_score(alerts, trends)
 
-        # Step 6: Generate recommendation (LLM uses history to find trends)
+        # Generate recommendation (LLM uses history to find trends)
         recommendation = self.generate_recommendation(
+            plant_id,
+            plant["species_id"],
             plant["plant_name"],
             species["common_name"],
             sensors,
@@ -408,7 +486,7 @@ class PlantMonitor:
             audience_level=audience_level,
         )
 
-        # Step 7: Return complete status
+        # Return complete status
         return {
             "plant_id": plant_id,
             "plant_name": plant["plant_name"],
@@ -440,5 +518,39 @@ class PlantMonitor:
     def get_sensor_history(self, plant_id: str, days: int = 7) -> List[Dict]:
         """Get historical sensor data"""
         return self._get_sensor_history(plant_id, days=days)
+    
+    
+    def _log_llm_response(
+        self,
+        plant_id: str,
+        species_id: str,
+        audience_level: str,
+        sensors: Dict,
+        species_thresholds: Dict,
+        alerts: List[Dict],
+        history: Optional[List[Dict]],
+        recommendation: Dict,
+    ) -> None:
+        """
+        save the recommendation to the database.
+
+        This only does anything if the database object has a save_llm_response method.
+        Otherwise it is a no-op and safe to leave in.
+        """
+        if self.use_mock_db or not hasattr(self.db, "save_llm_response"):
+            return
+
+        self.db.save_llm_response(
+            plant_id=plant_id,
+            species_id=species_id,
+            audience_level=audience_level,
+            sensors=sensors,
+            species_thresholds=species_thresholds,
+            alerts=alerts,
+            history=history,
+            recommendation_text=recommendation.get("text"),
+            recommendation_source=recommendation.get("source"),
+            timestamp=datetime.now().isoformat(),
+        )
     
     # any other methods needed for frontend or anything can be added here
