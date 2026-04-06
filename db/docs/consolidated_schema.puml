@@ -74,7 +74,7 @@ usda ..> plant : "Enriches usda_traits"
 pfaf ..> plant : "Enriches pfaf_traits/descriptions"
 
 entity "App_User" as user {
-  * user_id : UUID <<PK>>
+  * user_id : String <<PK>>
   --
   * audience_level : String (e.g. "beginner")
 }
