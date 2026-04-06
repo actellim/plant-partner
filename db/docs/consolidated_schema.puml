@@ -44,6 +44,7 @@ entity "Attribution" as attr {
 entity "User_Plant" as user_plant {
   * plant_id : UUID <<PK>>
   --
+  * user_id : String <<FK>> (App_User.user_id)
   * species_id : UUID <<FK>> (Consolidated_Plant.id)
   * nickname : String
   * created_at : Timestamp
@@ -71,5 +72,30 @@ package "Source Artifacts" {
 
 usda ..> plant : "Enriches usda_traits"
 pfaf ..> plant : "Enriches pfaf_traits/descriptions"
+
+entity "App_User" as user {
+  * user_id : UUID <<PK>>
+  --
+  * audience_level : String (e.g. "beginner")
+}
+
+entity "LLM_Response_Log" as llm_log {
+  * log_id : UUID <<PK>>
+  --
+  * plant_id : UUID <<FK>> (User_Plant.plant_id)
+  * species_id : UUID <<FK>> (Consolidated_Plant.id)
+  * audience_level : String
+  * sensors: JSON
+  * species_thresholds : JSON
+  * alerts : JSON
+  * history : JSON
+  * recommendation_text : Text
+  * recommendation_source : String
+  * timestamp : Timestamp
+}
+
+user ||--o{ user_plant : "owns"
+user_plant ||--o{ llm_log: "receives advice for"
+plant ||--o{ llm_log : "is subject of"
 
 @enduml
