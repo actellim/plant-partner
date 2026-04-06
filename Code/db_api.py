@@ -154,11 +154,14 @@ class PlantDatabase:
         return "beginner"
 
     def save_audience_level(self, user_id, audience_level_arg):
-        continue
+        # continue
+        pass
     
     # LLM Logging---------------------------------------------------------------------
     def save_llm_response(self, plant_id, species_id, audience_level, sensors, species_thresholds, alerts, history, recommendation_text, recommendation_source, timestamp):
-        continue
-
-    def get_llm_responses(self, plant_id, time_start, time_end):
-        continue
+        # continue
+        pass
+    
+        def get_llm_responses(self, plant_id, time_start, time_end):
+        # continue
+            pass 

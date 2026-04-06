@@ -1,8 +1,14 @@
 # api.py
 from fastapi import FastAPI, Query
 from fastapi.middleware.cors import CORSMiddleware
+import sys
+from pathlib import Path
+
+CURRENT_DIR = Path(__file__).resolve().parent
+sys.path.append(str(CURRENT_DIR))
+
 from backend_logic import PlantMonitor
-import openrouter_llm
+# import openrouter_llm
 import db_api
 
 app = FastAPI()
@@ -17,9 +23,9 @@ app.add_middleware(
 )
 
 # Initialize LLM + DB once
-llm = openrouter_llm.OpenRouterExplainer()
+# llm = openrouter_llm.OpenRouterExplainer()
 db = db_api.PlantDatabase() 
-monitor = PlantMonitor(llm=llm, database=db)
+monitor = PlantMonitor(llm=None, database=db)
 
 
 @app.get("/api/plants")
