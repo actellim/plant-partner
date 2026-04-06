@@ -21,19 +21,28 @@ def build_database():
         )
     ''')
     
+    # Users
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS App_User (
+            user_id TEXT PRIMARY KEY,
+            audience_level TEXT DEFAULT 'beginner'
+        )
+    ''')
+    
     # User Plants
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS User_Plant(
         plant_id TEXT PRIMARY KEY,
+        user_id TEXT,
         species_id TEXT,
         nickname TEXT,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (user_id) REFERENCES App_User(user_id),
         FOREIGN KEY(species_id) REFERENCES Consolidated_Plant(id)
         )
     ''')
 
     # Sensor Readings
-
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS Sensor_Reading(
             reading_id TEXT PRIMARY KEY,
@@ -46,6 +55,25 @@ def build_database():
             FOREIGN KEY(plant_id) REFERENCES User_Plant(plant_id)
             )
         ''')
+    
+    # LLM Logging
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS LLM_Response_Log (
+            log_id TEXT PRIMARY KEY,
+            plant_id TEXT,
+            species_id TEXT,
+            audience_level TEXT,
+            sensors TEXT,
+            species_thresholds TEXT,
+            alerts TEXT,
+            history TEXT,
+            recommendation_text TEXT,
+            recommendation_source TEXT,
+            timestamp DATETIME,
+            FOREIGN KEY(plant_id) REFERENCES User_Plant(plant_id),
+            FOREIGN KEY(species_id) REFERENCES Consolidated_Plant(id) 
+        ) 
+    ''')
 
     conn.commit()
 

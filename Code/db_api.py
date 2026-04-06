@@ -36,7 +36,7 @@ class PlantDatabase:
 
     # Plant Queries-------------------------------------------------------------------
     # Let users add their own plants
-    def add_plant(self, species_id, nickname=""):
+    def add_plant(self, user_id, species_id, nickname=""):
         plant_id = str(uuid.uuid4())
         created_at = datetime.utcnow().isoformat()
         
@@ -54,7 +54,7 @@ class PlantDatabase:
     def get_all_plants(self, user_id):
         with self._get_connection() as conn:
             cursor = conn.cursor()
-            cursor.execute("SELECT * FROM User_Plant")
+            cursor.execute("SELECT * FROM User_Plant WHERE user_id = ?", (user_id,))
 
             # Fetch all rows... and convert them into a list of dicts
             return [dict(row) for row in cursor.fetchall()]
@@ -64,15 +64,12 @@ class PlantDatabase:
     def get_plant(self, user_id, plant_id):
         with self._get_connection() as conn:
             cursor = conn.cursor()
-            cursor.execute("SELECT * FROM User_Plant WHERE plant_id = ?", 
-                           (plant_id,))
+            cursor.execute("SELECT * FROM User_Plant WHERE user_id = ? AND plant_id = ?", 
+                           (user_id, plant_id))
             row = cursor.fetchone()
 
             # Convert the row into a dict
-            if row:
-                return dict(row)
-            return None
-    
+            return dict(row) if row else None
 
     # Update a users plant
     def update_plant(self, plant_id, nickname):
@@ -149,19 +146,71 @@ class PlantDatabase:
 
     
     # User Queries--------------------------------------------------------------------
-
     def get_audience_level(self, user_id):
-        return "beginner"
+        with self._get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute("SELECT audience_level FROM App_User WHERE user_id = ?", (user_id,))
+            row = cursor.fetchone()
+            return row['audience_level'] if row else 'beginner'
 
-    def save_audience_level(self, user_id, audience_level_arg):
-        # continue
-        pass
+    # adds the user if they don't exist, updates their level
+    def save_audience_level(self, user_id, level):
+        with self._get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute('''
+                INSERT OR REPLACE INTO App_User (user_id, audience_level)
+                VALUES (?, ?)
+            ''', (user_id, level))
     
     # LLM Logging---------------------------------------------------------------------
     def save_llm_response(self, plant_id, species_id, audience_level, sensors, species_thresholds, alerts, history, recommendation_text, recommendation_source, timestamp):
-        # continue
-        pass
+        log_id = str(uuid.uuid4())
+        if not timestamp:
+            timestamp = datetime.utcnow().isoformat()
+
+        # Serialize to a more structured format for storage
+        sensors_json = json.dumps(sensors)
+        thresholds_json = json.dumps(species_thresholds)
+        alerts_json = json.dumps(alerts)
+        history_json = json.dumps(history)
+
+        # Dump it
+        with self._get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute('''
+                           INSERT INTO LLM_Response_Log
+                           (log_id, plant_id, species_id, audience_level, sensors, species_thresholds, alerts, history, recommendation_text, recommendation_source, timestamp)
+                           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ''', (log_id, plant_id, species_id, audience_level, sensors_json, thresholds_json, alerts_json, history_json, recommendation_text, recommendation_source, timestamp))
     
-        def get_llm_responses(self, plant_id, time_start, time_end):
-        # continue
-            pass 
+    def get_llm_responses(self, plant_id, time_start=None, time_end=None):
+        with self._get_connection() as conn:
+            cursor = conn.cursor()
+            query = "SELECT * FROM LLM_Response_Log WHERE plant_id = ?"
+            params = [plant_id]
+
+            # Optional timestamp filtering
+            if time_start:
+                query += " AND timestamp >= ?"
+                params.append(time_start)
+            if time_end:
+                query += " AND timestamp <= ?"
+                params.append(time_end)
+            
+            # run the query
+            query += " ORDER BY timestamp DESC"
+            cursor.execute(query, tuple(params))
+            results = []
+            
+            # filter the results
+            for row in cursor.fetchall():
+                d = dict(row)
+                d['sensors'] = json.loads(d['sensors'])
+                d['species_thresholds'] = json.loads(d['species_thresholds'])
+                d['alerts'] = json.loads(d['alerts'])
+                d['history'] = json.loads(d['history'])
+                results.append(d)
+            
+            # pass them back
+            return results
+                
