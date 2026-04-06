@@ -25,7 +25,7 @@ app.add_middleware(
 # Initialize LLM + DB once
 # llm = openrouter_llm.OpenRouterExplainer()
 db = db_api.PlantDatabase() 
-monitor = PlantMonitor(llm=None, database=db)
+monitor = PlantMonitor(llm=None, database=None)
 
 
 @app.get("/api/plants")

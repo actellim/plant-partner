@@ -97,10 +97,12 @@ function App() {
         return res.json();
       })
       .then((data) => {
+        console.log("GET /api/plants ->", data);
         setApiPlants(data);
 
         if (data.length > 0) {
           const firstPlant = data[0];
+          console.log("First plant ID:", firstPlant.uuid || firstPlant.plant_id);
           setSelectedPlant({
             id: firstPlant.uuid || firstPlant.plant_id,
             source: "myPlants",
@@ -111,6 +113,7 @@ function App() {
         }
       })
       .catch((err) => {
+        console.error(err);
         setError(err.message);
       })
       .finally(() => {
@@ -135,9 +138,11 @@ function App() {
         return res.json();
       })
       .then((data) => {
+        console.log(`GET /api/plants/${selectedPlant.id}/status ->`, data);
         setSelectedPlantStatus(data);
       })
       .catch((err) => {
+        console.error(err);
         setError(err.message);
         setSelectedPlantStatus(null);
       })
@@ -188,6 +193,7 @@ function App() {
           temperature: "Loading...",
         },
         status: loadingStatus ? "Loading recommendation..." : "No data available.",
+        alerts: [],
       };
     }
 
@@ -224,6 +230,24 @@ function App() {
       alerts: selectedPlantStatus.alerts || [],
     };
   }, [selectedPlant, selectedPlantStatus, browsePlants, loadingStatus]);
+
+  const testBackendConnection = () => {
+    fetch("http://127.0.0.1:8000/api/plants")
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Backend request failed");
+        }
+        return res.json();
+      })
+      .then((data) => {
+        console.log("TEST BACKEND RESPONSE:", data);
+        alert("Frontend and backend are connected. Check the browser console too.");
+      })
+      .catch((err) => {
+        console.error("Backend test failed:", err);
+        alert("Backend test failed: " + err.message);
+      });
+  };
 
   if (!isLoggedIn) {
     return (
@@ -293,6 +317,9 @@ function App() {
           <div className="scan-actions">
             <button className="primary-btn small-btn">Open Camera</button>
             <button className="secondary-btn small-btn">Upload Image</button>
+            <button className="secondary-btn small-btn" onClick={testBackendConnection}>
+              Test Backend
+            </button>
           </div>
         </div>
 

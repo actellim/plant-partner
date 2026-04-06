@@ -114,10 +114,9 @@ class PlantMonitor:
 
     # DATABASE ACCESS LAYER (using mock data, will be integrated later)
 
-    def _get_plant_data(self, user_id, plant_id: str) -> Dict:
-        """Get plant data from database (for now its mock)"""
+    def _get_plant_data(self, plant_id: str, user_id: Optional[str] = None) -> Dict:
+        """Get plant data from database (for now it's mock)"""
         if self.use_mock_db:
-            # will be replaced with database call when ready
             return MOCK_PLANTS.get(plant_id)
         else:
             return self.db.get_plant(user_id, plant_id)
@@ -504,10 +503,9 @@ class PlantMonitor:
 
     # HELPER FUNCTIONS
 
-    def get_all_plants(self, user_id) -> List[Dict]:
+    def get_all_plants(self, user_id=None):
         """Get list of all plants"""
         if self.use_mock_db:
-            # will be replaced with database call when ready
             return list(MOCK_PLANTS.values())
         else:
             return self.db.get_all_plants(user_id)
