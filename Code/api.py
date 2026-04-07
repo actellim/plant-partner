@@ -8,7 +8,7 @@ CURRENT_DIR = Path(__file__).resolve().parent
 sys.path.append(str(CURRENT_DIR))
 
 from backend_logic import PlantMonitor
-# import openrouter_llm
+import openrouter_llm
 import db_api
 
 app = FastAPI()
@@ -23,9 +23,9 @@ app.add_middleware(
 )
 
 # Initialize LLM + DB once
-# llm = openrouter_llm.OpenRouterExplainer()
+llm = openrouter_llm.OpenRouterExplainer()
 db = db_api.PlantDatabase() 
-monitor = PlantMonitor(llm=None, database=None)
+monitor = PlantMonitor(llm=llm, database=db)
 
 
 @app.get("/api/plants")
@@ -41,3 +41,13 @@ def get_plant_status(plant_id: str, user_id: str = Query(...), audience_level: s
 @app.get("/api/plants/{plant_id}/history")
 def get_plant_history(plant_id: str, days: int = Query(7)):
     return monitor.get_sensor_history(plant_id, days=days)
+
+@app.get("/api/llm-test")
+def test_llm(user_id: str):
+    """NEW: Test LLM endpoint"""
+    print(f"LLM test from user_id: {user_id}")
+    return {
+        "explanation": "Your Monstera needs more light. Move it closer to a window but avoid direct sun.",
+        "user_id": user_id,
+        "status": "success"
+    }
