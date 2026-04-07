@@ -1,6 +1,7 @@
 Kenneth – LLM Explanation
 
 1. Introduction
+
 In our system, the Large Language Model (LLM) is used to improve how plant care recommendations are presented to users. The system collects sensor data such as soil moisture, temperature, humidity, and light levels, and compares these values with ideal plant conditions.
 
 All decision making is handled by the backend. Based on this comparison, the system determines whether the plant is healthy or requires action, such as watering or adjusting environmental conditions.
@@ -25,7 +26,8 @@ This design ensures consistency and prevents errors caused by missing or incorre
 
 An overview of how users interact with the system is shown below.
 
-![Figure 1: Use Case Diagram of the Plant Care Monitoring](UML/Use%20Case%20Diagram.png)
+<img width="731" height="559" alt="Use Case Diagram (1)" src="https://github.com/user-attachments/assets/eb0af6e3-12eb-46bc-8935-587b256e60fe" />
+
 
 Figure 1: USe Case Diagram of the Plant Care Monitoring System.
 
@@ -61,6 +63,7 @@ These constraints are important because LLMs can sometimes generate incorrect or
 
 The prompt rules used to control the LLM are shown below.
 
+<img width="578" height="386" alt="image" src="https://github.com/user-attachments/assets/d489b88e-9c2a-4093-b642-2d38e563d13a" />
 
 Figure 2: Prompt Rules USed to Control LLM Behaviour.
 
@@ -87,6 +90,7 @@ This example shows how the explanation changes depending on the user level while
 
 An example of these outputs is shown below.
 
+<img width="926" height="302" alt="image" src="https://github.com/user-attachments/assets/163346dd-1550-473b-843a-8c361ce889ec" />
 
 Figure 3: Example Outputs for Different User Levels.
 
