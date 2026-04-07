@@ -29,13 +29,13 @@ monitor = PlantMonitor(llm=None, database=None)
 
 
 @app.get("/api/plants")
-def get_plants():
-    return monitor.get_all_plants()
+def get_plants(user_id: str = Query(...)):
+    return monitor.get_all_plants(user_id)
 
 
 @app.get("/api/plants/{plant_id}/status")
-def get_plant_status(plant_id: str, audience_level: str = Query("beginner")):
-    return monitor.get_plant_status(plant_id, audience_level=audience_level)
+def get_plant_status(plant_id: str, user_id: str = Query(...), audience_level: str = Query("beginner")):
+    return monitor.get_plant_status(plant_id, user_id = user_id, audience_level=audience_level)
 
 
 @app.get("/api/plants/{plant_id}/history")

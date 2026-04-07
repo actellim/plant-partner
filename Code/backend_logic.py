@@ -431,7 +431,7 @@ class PlantMonitor:
 
     # 4. MAIN MONITORING FUNCTION
 
-    def get_plant_status(self, plant_id: str, audience_level: str = "beginner") -> Dict:
+    def get_plant_status(self, plant_id: str, user_id: str, audience_level: str = "beginner") -> Dict:
         """
         MAIN FUNCTION: Get complete plant health status.
 
@@ -444,14 +444,14 @@ class PlantMonitor:
         """
 
         # Step 1: Get plant and species data (using mock or database)
-        plant = self._get_plant_data(plant_id)
+        plant = self._get_plant_data(plant_id, user_id)
         if not plant:
             raise ValueError(f"Plant {plant_id} not found")
 
         species = self._get_species_data(plant["species_id"])
 
         # Get the audience level
-        audience_level = self._get_audience_level(plant_id, audience_level)
+        audience_level = self._get_audience_level(user_id, audience_level)
 
         # Get current sensor readings
         sensors = self._get_current_sensors(plant_id)
