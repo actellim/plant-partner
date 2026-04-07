@@ -2,11 +2,17 @@ import sqlite3
 import json
 import uuid                
 from datetime import datetime
+from pathlib import Path
 
 
 class PlantDatabase:
-    def __init__(self, db_path='db/plant_partner.sqlite'):
-        self.db_path = db_path
+    def __init__(self, db_path=None):
+        if db_path is None:
+            current_dir = Path(__file__).resolve().parent
+            project_root = current_dir.parent
+            self.db_path = str(project_root / 'db' / 'plant_partner.sqlite')
+        else:
+            self.db_path = db_path
 
     # Create a connection and set up the factory
     def _get_connection(self):
@@ -43,9 +49,9 @@ class PlantDatabase:
         with self._get_connection() as conn:
             cursor = conn.cursor()
             cursor.execute('''
-                INSERT INTO User_Plant (plant_id, species_id, nickname, created_at)
-                VALUES (?, ?, ?, ?)
-            ''', (plant_id, species_id, nickname, created_at))
+                INSERT INTO User_Plant (plant_id, user_id, species_id, nickname, created_at)
+                VALUES (?, ?, ?, ?, ?)
+            ''', (plant_id, user_id, species_id, nickname, created_at))
             # return the plant_id that was just created.
             return plant_id
 

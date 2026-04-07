@@ -2,18 +2,15 @@
 
 ## Introduction
 
+To ground models in real world data, we make use of a technique called symbolic retreival. This allows us to steer models output with real world data and our hard coded logic, giving users feedback based on their self-reported hortacultural skill level. This gives us a way to perform a validation check to ensure the model is giving the exected output. We log the models response for later review to ensure alignment with our hard-coded recommendations.
 
 ## Work Done
-
-*Needs to be discussed with the team to verify their implementations.*
 
 ### Plant Data Structure
 
 (Explain how plant data and ideal environmental ranges were stored in the system.)
 
 We will have a single table for plant data, stored by UUID. It will contain data from both PFAF and the USDA PLANTS database merged into a single table. If the data was supplied by the USDA PLANTS database we will have `moisture_use`, `precipitation_min` values for moisture, and `moisture_code` from the PFAF database. For lighting we have `shade_tolerance` from the USDA, and `shade_code`. Temperature is given as `min_temp_f` from the USDA and `hardiness_zone` from PFAF. Anything from PFAF will also have `care_requirements`, as well as some other data about `habitats`, `cultivation`, `edible_uses`, and `medicinal_uses`. `attributions` should always be provided.
-
-*speculative, needs discussion:*
 
 We should also have a table for sensor data. Sensor data should be associated with a specific plant species chosen by the user at startup; and each of the users plants should have a specific UUID for matching associated sensor data.
 
