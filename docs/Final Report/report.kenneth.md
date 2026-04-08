@@ -22,6 +22,8 @@ The LLM receives structured data from the backend after a decision has already b
 
 The LLM does not access the database or perform any calculations. All required information is prepared and sent by the backend in a structured format.
 
+The LLM is accessed through the OpenAI SDK, which communicates with the external model using API requests.
+
 This design ensures consistency and prevents errors caused by missing or incorrect data. It also aligns with common IoT system architectures where data is processed first and then shared across components using APIs [2].
 
 An overview of how users interact with the system is shown below.
@@ -127,6 +129,8 @@ In this system, the LLM is used in a controlled and limited way to improve user 
 All decisions are made by the backend using sensor data and predefined rules. The LLM only explains these decisions in a clear and user friendly way.
 
 By separating decision making from explanation, the system remains accurate, reliable, and easy to use.
+
+As part of this work, the LLM explanation module was implemented to integrate with the backend system. This included designing the prompt structure, enforcing the response rules, handling different user levels, and implementing a fallback mechanism to ensure reliability.
 
 
 
