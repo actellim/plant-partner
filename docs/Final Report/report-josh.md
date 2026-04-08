@@ -1,28 +1,22 @@
-# Joshua – Data Retrieval 
+# Joshua – Data Retrieval and Backend Logic
 
 ## Introduction
+A significant challenge in integrating Large Language Models (LLMs) into specialized domains like horticulture is the "hallucination" problem, where models fabricate plausible but incorrect information[1]. To mitigate this, our research focused on Retrieval-Augmented Generation (RAG). While early RAG research focused on vector-based search[2], more recent advancements have proven the efficacy of "Symbolic Retrieval," where models are augmented with relational databases to serve as a structured, deterministic memory[3]. 
 
-To ground models in real world data, we make use of a technique called symbolic retreival. This allows us to steer models output with real world data and our hard coded logic, giving users feedback based on their self-reported hortacultural skill level. This gives us a way to perform a validation check to ensure the model is giving the exected output. We log the models response for later review to ensure alignment with our hard-coded recommendations.
+For this project, we implemented a symbolic retrieval architecture that grounds the LLM in real-world sensor telemetry and established botanical thresholds. By providing the model with a "gold-standard" care profile retrieved via SQL, we perform a validation check[1] that ensures the model's care recommendations are physically grounded. Furthermore, we integrated a multi-user awareness layer, allowing the system to adjust its conversational complexity based on the user's self-identified "audience level" (e.g., beginner vs. expert).
 
 ## Work Done
+The core of the retrieval system involved merging disparate datasets from the USDA PLANTS and Plants For A Future (PFAF) databases into a unified SQLite repository. This unified plant table contains consolidated data indexed by UUID, merging USDA fields like `moisture_use`, `precipitation_min`, and `shade_tolerance` with PFAF data such as `moisture_code`, `shade_code`, and `hardiness_zone`. Records sourced from the PFAF database also include qualitative care data, including `care_requirements`, `habitats`, `cultivation` details, and `edible_uses`, ensuring each entry contains mandatory source attributions and comprehensive physiological thresholds.
 
-### Plant Data Structure
+Beyond species data, the schema includes a relational structure to support time-series environmental telemetry and user management. Sensor data is associated with specific plant species selected by the user, with each individual plant instance assigned a unique UUID to link it to its historical readings. I also implemented an `App_User` table to store experience levels and a dedicated logging table for LLM interactions. This logging table captures the precise payloads sent to the model—including sensor states, alerts, and history—alongside the generated response to ensure a complete audit trail for system verification.
 
-We have a single table for plant data, stored by UUID. It contains data from both PFAF and the USDA PLANTS database merged into a single table. If the data was supplied by the USDA PLANTS database we will have `moisture_use`, `precipitation_min` values for moisture, and `moisture_code` from the PFAF database. For lighting we have `shade_tolerance` from the USDA, and `shade_code`. Temperature is given as `min_temp_f` from the USDA and `hardiness_zone` from PFAF. Anything from PFAF will also have `care_requirements`, as well as some other data about `habitats`, `cultivation`, `edible_uses`, and `medicinal_uses`. `attributions` should always be provided.
+The data retrieval process I developed allows the system to query the database using either the plant's common name or its primary scientific name. Once a match is identified, the backend retrieves the relevant moisture, lighting, and temperature thresholds. During an automated monitoring cycle, the system fetches the historical sensor data for a given plant UUID and performs a direct numerical comparison against the corresponding species data using a species UUID lookup. This comparison allows our deterministic software engineering safeguards to identify alerts before the LLM is even invoked.
 
-We also have a table for sensor data. Sensor data should be associated with a specific plant species chosen by the user at startup; and each of the users plants should have a specific UUID for matching associated sensor data. We have a table for user information so we can score users by their experience, and we have a table for storing LLM responses.
+Once a species match and sensor status are verified, the system compiles a structured RAG payload to provide the LLM with a grounded recommendation context. The LLM then produces a response, which is logged with a unique response UUID, the associated identifiers, the original input data, and the model's final output. This ensures that the advice presented to the user is verified against our deterministic thresholds and that the LLM's output is logged for later validation.
 
-### Data Retrieval Process
+## References
+[1] E. Collini, F. I. Kurniadi, P. Nesi, and G. Pantaleo, "Context-Aware Retrieval Augmented Generation Using Similarity Validation to Handle Context Inconsistencies in Large Language Models," *IEEE Access*, vol. 13, 2025.
 
-Data can be returned from the database using either the common plant name (`common_name_primary`), or the scientific name (`scientific_name_primpary`). If we have a match for the user, we can return the moisture, lighting, and temperature data to the LLM for processing.
+[2] P. Lewis *et al.*, "Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks," in *Advances in Neural Information Processing Systems*, vol. 33, 2020.
 
-The past month of sensor data and the plant species UUID will be returned to the back-end for a given plant UUID when an automated query is conducted. This will then be compared to the plant data via species UUID lookup from our database. 
-
-### Role in the System
-
-Once the user verifies that we have a match for their plant, we provide the LLM with a recommendation, with a summary of the associated sensor data and plant care data. The LLM then produces a response, which we log for debugging/verification/testing purposes. Responses will be stored with a response UUID, the species and plant UUIDs, the time, the programs input data and recommendation, and the model's output. The output is then presented to the user.
-
-
-### Example Data
-
-(Provide a table showing plant profiles and their ideal ranges)
+[3] C. Hu *et al.*, "ChatDB: Augmenting LLMs with Databases as Their Symbolic Memory," *arXiv preprint arXiv:2306.03901*, 2023.
